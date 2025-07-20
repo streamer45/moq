@@ -1,0 +1,26 @@
+[package]
+name = "moq-transcode"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+moq-lite = { path = "../moq" }
+hang = { path = "../hang" }
+
+anyhow = "1"
+clap = { version = "4", features = ["derive", "env"] }
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+toml = "0.8"
+tracing = "0.1"
+url = { version = "2", features = ["serde"] }
+opus = "0.3"
+
+# This is not in your provided file list, but is used by moq-relay.
+# I'm assuming it exists. Let me know if that's not the case.
+moq-native = { path = "../moq-native", optional = true }
+
+[features]
+default = ["native"]
+native = ["moq-native"]
