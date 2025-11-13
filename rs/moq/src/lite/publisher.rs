@@ -245,23 +245,19 @@ impl<S: web_transport_trait::Session> Publisher<S> {
 			// TODO add some logging at least.
 			let handle = Box::pin(Self::serve_group(session.clone(), msg, priority, group));
 
-			// Terminate the old group if it's still running.
-			if let Some(old_sequence) = old_sequence.take() {
-				tracing::debug!(subscribe = %subscribe.id, track = %track.info.name, old = %old_sequence, %latest, "aborting group");
-				old_group.take(); // Drop the future to cancel it.
-			}
-
-			assert!(old_group.is_none());
-
-			if sequence >= *latest {
-				old_group = new_group;
-				old_sequence = new_sequence;
-
+			// Try to assign this group to a slot, or skip it if both slots are occupied
+			if new_group.is_none() {
+				// Newest slot is free
 				new_group = Some(handle);
 				new_sequence = Some(sequence);
-			} else {
+			} else if old_group.is_none() {
+				// Old slot is free
 				old_group = Some(handle);
 				old_sequence = Some(sequence);
+			} else {
+				// Both slots are occupied, skip this group to avoid aborting in-progress groups
+				tracing::debug!(subscribe = %subscribe.id, track = %track.info.name, %sequence, %latest, old=?old_sequence, "skipping group: all slots full");
+				drop(handle);
 			}
 		}
 	}
