@@ -260,6 +260,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "bug-reproducer"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytes",
+ "moq-lite",
+ "moq-native",
+ "tokio",
+ "tracing",
+ "url",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

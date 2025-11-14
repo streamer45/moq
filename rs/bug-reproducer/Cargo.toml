@@ -1,0 +1,13 @@
+[package]
+name = "bug-reproducer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+moq-lite = { path = "../moq" }
+moq-native = { path = "../moq-native" }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+anyhow = "1"
+bytes = "1"
+url = "2"
